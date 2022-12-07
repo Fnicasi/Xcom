@@ -1,13 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 //To make sure this script runs before the others, inside Edit-> Project Settings -> Script Execution Order -> Set before Default Time. 
 public class UnitActionSystem : MonoBehaviour
 {
+    public static UnitActionSystem Instance { get; private set; } //Singleton property, this way it can be accesed by other scripts easily (get)
+
     [SerializeField] private Unit selectedUnit;
 
     [SerializeField] private LayerMask unitLayerMask;
+    //This event will notify all subscribers when a new unit is selected
+    public event EventHandler OnSelectedUnitChanged;
+
+    private void Awake()
+    {
+        if(Instance!=null) //Just in case another UnitActionSystem was created incorrectly 
+        {
+            Debug.Log("There's more than one UnitActionSystem" + transform + " - " + Instance);
+            Destroy(Instance);
+            return;  
+        }
+        Instance= this;
+    }
 
     private void Update()
     {
@@ -32,11 +48,26 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit)) //By using TryGetComponent, it returns a true/false, and if true stores it in out --> unit
             {
-                selectedUnit = unit;
+                SetSelectedUnit(unit);
                 return true;
             }
         }
         selectedUnit= null;
         return false; // No collision with a unit
+    }
+
+    private void SetSelectedUnit(Unit unit)
+    {
+        selectedUnit = unit;
+        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty); //THe code commented below does the same than this compact line
+        /**if (OnSelectedUnitChanged != null) 
+        {
+            OnSelectedUnitChanged(this, EventArgs.Empty);
+        }**/
+    }
+
+    public Unit GetSelectedUnit()
+    {
+        return selectedUnit;
     }
 }
