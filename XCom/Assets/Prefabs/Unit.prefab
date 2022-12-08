@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e05b3a0da86e17e409100c96b18a0e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unit: {fileID: 0}
 --- !u!1 &520131830598583948
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,6 +108,7 @@ GameObject:
   - component: {fileID: 520131830598583947}
   - component: {fileID: 520131830598583946}
   - component: {fileID: 8544671272490262292}
+  - component: {fileID: 751463159}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
@@ -143,10 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46514ac48ce218b49ae7a0dee512a731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitAnimator: {fileID: 460733343408775188}
-  moveSpeed: 2
-  rotateSpeed: 10
-  stoppingDistance: 0.1
+  unitAnimator: {fileID: 0}
 --- !u!136 &8544671272490262292
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -161,6 +160,19 @@ CapsuleCollider:
   m_Height: 1.916024
   m_Direction: 1
   m_Center: {x: 0, y: 0.9033537, z: 0}
+--- !u!114 &751463159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520131830598583948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564027e8abcf1254eb4cb9c958956bbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitAnimator: {fileID: 0}
 --- !u!1001 &520131828890385761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -546,12 +558,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8dbb22b9d53a7664b8619d4c6888d92f, type: 3}
---- !u!95 &460733343408775188 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 95485627480488536, guid: 8dbb22b9d53a7664b8619d4c6888d92f,
-    type: 3}
-  m_PrefabInstance: {fileID: 520131830967425612}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &515205819329112276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4927815602188952, guid: 8dbb22b9d53a7664b8619d4c6888d92f,

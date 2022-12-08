@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -66,4 +67,13 @@ public class GridSystem //Not extending monobehaviour, because we want to use co
     {
         return gridObjectsArray[gridPosition.x, gridPosition.z];
     }
+    //Will check if it is out of bounds
+    public Boolean IsValidGridPosition(GridPosition gridPosition)
+    { 
+         return gridPosition.x >= 0 && 
+                gridPosition.z >= 0 && 
+                gridPosition.x< width && 
+                gridPosition.z< height;
+    }
 }
+

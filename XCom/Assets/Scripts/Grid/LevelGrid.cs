@@ -40,13 +40,27 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
         GridObject gridObject = gridSystem.GetGridObject(gridPosition); //Take the GridObject in gridPosition and...
         gridObject.RemoveUnit(unit); //delete the unit from the list
     }
+
+    //Get the grid position (through the grid system) of the world position
     public GridPosition GetGridPosition(Vector3 worldPosition)
     {
         return gridSystem.GetGridPosition(worldPosition); 
     }
+    //This => (lambda) notation is equal to the one in GetGridPosition aka return the value on the right
+    public bool IsValidGridPosition(GridPosition gridPosition) => gridSystem.IsValidGridPosition(gridPosition);
+
+    //Get the world position (through the grid system) of the grid position
+    public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
+
     public void UnitMovedGridPosition(Unit unit, GridPosition fromGridPos, GridPosition toGridPos)
     {
         RemoveUnitAtGridPosition(fromGridPos, unit); //Clear the grid position from the unit that left
         AddUnitAtGridPosition(toGridPos, unit); //Assign to toGridPos the unit
+    }
+
+    public bool HasAnyUnitOnGridPosition (GridPosition gridPosition)
+    { //If there is any unit, return true
+        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+        return gridObject.HasAnyUnit();
     }
 }
