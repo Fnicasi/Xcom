@@ -48,9 +48,11 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
     }
     //This => (lambda) notation is equal to the one in GetGridPosition aka return the value on the right
     public bool IsValidGridPosition(GridPosition gridPosition) => gridSystem.IsValidGridPosition(gridPosition);
-
     //Get the world position (through the grid system) of the grid position
     public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
+    public int GetWidth() => gridSystem.GetWidth();
+    public int GetHeight() => gridSystem.GetHeight();
+
 
     public void UnitMovedGridPosition(Unit unit, GridPosition fromGridPos, GridPosition toGridPos)
     {

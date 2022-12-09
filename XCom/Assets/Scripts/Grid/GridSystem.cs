@@ -75,5 +75,14 @@ public class GridSystem //Not extending monobehaviour, because we want to use co
                 gridPosition.x< width && 
                 gridPosition.z< height;
     }
+
+    public int GetWidth()
+    {
+        return width;
+    }
+    public int GetHeight()
+    {
+        return height;
+    }
 }
 
