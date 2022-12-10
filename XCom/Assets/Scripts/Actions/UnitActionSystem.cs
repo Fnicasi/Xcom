@@ -43,6 +43,14 @@ public class UnitActionSystem : MonoBehaviour
                 }
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if (selectedUnit != null)
+            {
+                selectedUnit.GetSpinAction().Spin();
+            }
+        }
     }
 
     private bool TryHandleUnitSelection()

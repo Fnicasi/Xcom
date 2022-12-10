@@ -6,12 +6,14 @@ public class Unit : MonoBehaviour
 {
     public Animator unitAnimator;
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
-   [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
+    [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
+    [SerializeField] private SpinAction spinAction;
 
     private void Awake()
     {
         moveAction = GetComponent<MoveAction>();
         unitAnimator = GetComponentInChildren<Animator>();
+        spinAction= GetComponent<SpinAction>();
     }
     private void Start()
     {
@@ -42,5 +44,9 @@ public class Unit : MonoBehaviour
         return gridPosition;
     }
 
+    public SpinAction GetSpinAction()
+    {
+        return spinAction;
+    }
   
 }

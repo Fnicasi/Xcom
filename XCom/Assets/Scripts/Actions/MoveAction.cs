@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAction : MonoBehaviour
+public class MoveAction : BaseAction
 {
-    public Animator unitAnimator;
 
     private Vector3 targetPosition; //Where the unit has to go
     private float stoppingDistance; //The distance at which the movement stops and we consider the unit has arrived to their destination
@@ -12,15 +11,13 @@ public class MoveAction : MonoBehaviour
     private float rotateSpeed;
 
     [SerializeField] private int maxMoveDistance;
-    private Unit unit;
-
-    private void Awake()
+   
+    protected override void Awake()
     {
-        unit = GetComponent<Unit>();
+        base.Awake(); //So the Awake from BaseAction is ran
+         
         targetPosition = transform.position;
-        unitAnimator = GetComponentInChildren<Animator>();
 
-        maxMoveDistance = 4;
     }
 
     private void Start()
@@ -28,9 +25,14 @@ public class MoveAction : MonoBehaviour
         stoppingDistance = 0.01f;
         moveSpeed = 5f;
         rotateSpeed= 10f;
+        maxMoveDistance = 4;
     }
     private void Update()
     {
+        if (!isActive) //If not performing an action (being active), return
+        {
+            return; 
+        }
         if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance) //If we reached the target, don't move
         {
             unitAnimator.SetBool("isWalking", true); //We set the bool to true so the Animator transitions to walking
@@ -42,6 +44,7 @@ public class MoveAction : MonoBehaviour
         else
         {
             unitAnimator.SetBool("isWalking", false);
+            isActive= false; //No longer performing an action
         }
     }
 
@@ -49,6 +52,7 @@ public class MoveAction : MonoBehaviour
     public void Move(GridPosition targetGridPosition)
     {
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition); //So "this" instance gets the value set
+        isActive= true; //The unit is performing action, thus allow action to be executed in Update
     }
 
     //Returns a list with all the grid positions where the unit can move (remember this script is attached to the unit)
