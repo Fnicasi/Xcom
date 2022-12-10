@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SpinAction : BaseAction
 {
+    //Delegates, just as any other function, can return different types and receive arguments
+    //public delegate void SpinCompleteDelegate();
+    //private SpinCompleteDelegate onSpinComplete;
+    //private Action onSpinComplete; //This line equals the delegeta above, this is an existing delegate in Unity.System, we will use OnActionComplete from BaseAction
+
+
     private float totalSpinAmount;
     private float addSpinAmount;
 
@@ -14,6 +21,7 @@ public class SpinAction : BaseAction
         {
             return;
         }
+
         addSpinAmount = 360f * Time.deltaTime;
         transform.eulerAngles += new Vector3(0, addSpinAmount, 0); //Rotate on the Y
 
@@ -21,10 +29,15 @@ public class SpinAction : BaseAction
         if(totalSpinAmount >= 360f)
         {
             isActive= false;
+            OnActionComplete(); //Call the delegate
         }
     }
-    public void Spin()
+
+    //Spin has the delegate SpinCompleteDelegate as argument and, when it finishes it will call the method passed as argument (ClearBusy in this case)
+    public void Spin(Action OnActionComplete)
     {
-        isActive= true;
+        this.OnActionComplete = OnActionComplete;
+        totalSpinAmount = 0;
+        isActive = true;
     }
 }

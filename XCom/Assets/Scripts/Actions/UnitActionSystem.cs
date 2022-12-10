@@ -8,11 +8,14 @@ public class UnitActionSystem : MonoBehaviour
 {
     public static UnitActionSystem Instance { get; private set; } //Singleton property, this way it can be accesed by other scripts easily (get)
 
-    [SerializeField] private Unit selectedUnit;
-
-    [SerializeField] private LayerMask unitLayerMask;
     //This event will notify all subscribers when a new unit is selected
     public event EventHandler OnSelectedUnitChanged;
+
+    [SerializeField] private Unit selectedUnit;
+    [SerializeField] private LayerMask unitLayerMask;
+
+    private bool isBusy;
+
 
     private void Awake()
     {
@@ -27,7 +30,11 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Update()
     {
-        
+
+        if (isBusy) //If performing an action (Busy), 
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(0)) //If left click, check for unit selection
         {
             TryHandleUnitSelection();
@@ -37,9 +44,11 @@ public class UnitActionSystem : MonoBehaviour
             if (selectedUnit != null) //If there's any selected unit...
             {
                 GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
+
                 if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition)) //if it's a valid position on the grid...
                 {
-                    selectedUnit.GetMoveAction().Move(mouseGridPosition); //move to the clicked position
+                    SetBusy();
+                    selectedUnit.GetMoveAction().Move(mouseGridPosition, ClearBusy); //move to the clicked position
                 }
             }
         }
@@ -48,7 +57,9 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (selectedUnit != null)
             {
-                selectedUnit.GetSpinAction().Spin();
+                SetBusy();
+                //To clearBusy and allow to perform actions once the method has finished, we use Delegates, sending the method we want called after the method Spin() has finished
+                selectedUnit.GetSpinAction().Spin(ClearBusy);
             }
         }
     }
@@ -81,5 +92,14 @@ public class UnitActionSystem : MonoBehaviour
     public Unit GetSelectedUnit()
     {
         return selectedUnit;
+    }
+
+    private void SetBusy()
+    {
+        isBusy= true;
+    }
+    private void ClearBusy()
+    {
+        isBusy= false; 
     }
 }

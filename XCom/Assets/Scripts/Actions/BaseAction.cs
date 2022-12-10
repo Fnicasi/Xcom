@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 //abstract so it's never created
 public abstract class BaseAction : MonoBehaviour
@@ -9,6 +10,8 @@ public abstract class BaseAction : MonoBehaviour
     protected Unit unit;
     protected bool isActive; //Check if the unit is active(performing an action), if true, allow actions on update
     protected Animator unitAnimator;
+
+    protected Action OnActionComplete;
 
 
     //Virtual so it can be overrided
