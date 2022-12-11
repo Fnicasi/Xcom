@@ -8,9 +8,13 @@ public class ActionButtonUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textMeshPro; //Has to be UGUI because its an UI object, TextMeshPro (no UGUI) is for world objects like the debug ones
     [SerializeField] private Button button;
+    [SerializeField] private GameObject selectedGameObject;
+
+    private BaseAction baseAction;
 
     public void SetBaseAction(BaseAction baseAction) 
     {
+        this.baseAction = baseAction;
         textMeshPro.text = baseAction.GetActionName().ToUpper(); //Set the text of the button 
 
         button.onClick.AddListener(() =>
@@ -19,6 +23,12 @@ public class ActionButtonUI : MonoBehaviour
         });
     }
     // Start is called before the first frame update
+
+    public void UpdateSelectedVisual()
+    {
+        BaseAction selectedBaseAction = UnitActionSystem.Instance.GetSelectedAction();
+        selectedGameObject.SetActive(selectedBaseAction == baseAction); //Set to active if this one is the same than the current one
+    }
     
 }
 

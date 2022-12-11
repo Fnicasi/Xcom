@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 //To make sure this script runs before the others, inside Edit-> Project Settings -> Script Execution Order -> Set before Default Time. 
 public class UnitActionSystem : MonoBehaviour
@@ -11,6 +12,9 @@ public class UnitActionSystem : MonoBehaviour
 
     //This event will notify all subscribers when a new unit is selected
     public event EventHandler OnSelectedUnitChanged;
+    public event EventHandler OnSelectedActionChanged;
+    public event EventHandler<bool> OnBusyChanged;
+
 
     [SerializeField] private Unit selectedUnit;
     [SerializeField] private LayerMask unitLayerMask;
@@ -75,10 +79,7 @@ public class UnitActionSystem : MonoBehaviour
     private void SetSelectedUnit(Unit unit)
     {
         selectedUnit = unit;
-
         SetSelectedAction(unit.GetMoveAction());
-
-
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty); //The code commented below does the same than this compact line
         /*if (OnSelectedUnitChanged != null) 
         {
@@ -89,6 +90,7 @@ public class UnitActionSystem : MonoBehaviour
     public void SetSelectedAction(BaseAction baseAction)
     {
         selectedAction = baseAction;
+        OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public Unit GetSelectedUnit()
@@ -121,10 +123,13 @@ public class UnitActionSystem : MonoBehaviour
 
     private void SetBusy()
     {
-        isBusy= true;
+        isBusy = true;
+        OnBusyChanged?.Invoke(this, isBusy);
+
     }
     private void ClearBusy()
     {
-        isBusy= false; 
+        isBusy= false;
+        OnBusyChanged?.Invoke(this, isBusy);
     }
 }
