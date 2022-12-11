@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 //To make sure this script runs before the others, inside Edit-> Project Settings -> Script Execution Order -> Set before Default Time. 
 public class UnitActionSystem : MonoBehaviour
@@ -42,6 +43,10 @@ public class UnitActionSystem : MonoBehaviour
         {
             return;
         }
+        if(EventSystem.current.IsPointerOverGameObject()) //If the cursor is over any UI element...
+        {
+            return; //Return, ergo don't click
+        }
         TryHandleUnitSelection(); //Left click selection of units handling
         
         HandleSelectedAction(); //Action handling 
@@ -49,13 +54,19 @@ public class UnitActionSystem : MonoBehaviour
 
     private bool TryHandleUnitSelection()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //We will perform a raycast from the camera to the mouse position and store it as ray
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask)) //We check collision with a unit
+        if (Input.GetMouseButtonDown(0))
         {
-            if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit)) //By using TryGetComponent, it returns a true/false, and if true stores it in out --> unit
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //We will perform a raycast from the camera to the mouse position and store it as ray
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask)) //We check collision with a unit
             {
-                SetSelectedUnit(unit);
-                return true;
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit)) //By using TryGetComponent, it returns a true/false, and if true stores it in out --> unit
+                {
+                    if(unit == selectedUnit) {
+                        return false; //if the unit is already selected, don't select it again, (to be able to spin easily)
+                    }
+                    SetSelectedUnit(unit);
+                    return true;
+                }
             }
         }
         return false; // No collision with a unit
@@ -84,6 +95,12 @@ public class UnitActionSystem : MonoBehaviour
     {
         return selectedUnit;
     }
+
+    public BaseAction GetSelectedAction()
+    {
+        return selectedAction;
+    }
+
     //There's 2 ways of handling actions, each action has its own function due to the different required args or...
     //We create a general "takeAction" function 
     private void HandleSelectedAction()
@@ -93,22 +110,10 @@ public class UnitActionSystem : MonoBehaviour
             if (selectedUnit != null) //If there's any selected unit...
             {
                 GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
-
-                switch (selectedAction) //In the first case of different functions, we can solve it by doing a switch case
+                if (selectedAction.IsValidActionGridPosition(mouseGridPosition)) //Check if it's valid
                 {
-
-                    case MoveAction moveAction:
-                        if (moveAction.IsValidActionGridPosition(mouseGridPosition)) //if it's a valid position on the grid...
-                        {
-                            SetBusy();
-                            moveAction.Move(mouseGridPosition, ClearBusy); //move to the clicked position
-                        }
-                        break;
-                    case SpinAction spin:
-                        SetBusy();
-                        //To clearBusy and allow to perform actions once the method has finished, we use Delegates, sending the method we want called after the method Spin() has finished
-                        spin.Spin(ClearBusy);
-                        break;
+                    SetBusy(); //Set the unit as busy
+                    selectedAction.TakeAction(mouseGridPosition, ClearBusy); //Perform the action and then the ClearBusy when finished
                 }
             }
         }

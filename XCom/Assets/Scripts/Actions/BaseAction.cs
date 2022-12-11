@@ -24,9 +24,14 @@ public abstract class BaseAction : MonoBehaviour
 
     public abstract string GetActionName(); //We force the classes that extend to implement this function
 
-    // Update is called once per frame
-    void Update()
+    public abstract void TakeAction(GridPosition gridPosition, Action onActionComplete);
+
+    //Check if the grid position is valid
+    public virtual bool IsValidActionGridPosition(GridPosition gridPosition)
     {
-        
+        List<GridPosition> validGridPositionList = GetValidActionGridPositionList(); //Take the list of valid movements
+        return validGridPositionList.Contains(gridPosition); //Check if the gridPosition passed to move, is in the list of valid movements
     }
+    public abstract List<GridPosition> GetValidActionGridPositionList();
+
 }

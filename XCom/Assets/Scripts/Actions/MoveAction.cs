@@ -51,7 +51,7 @@ public class MoveAction : BaseAction
     }
 
     //Method to move the unit to the target
-    public void Move(GridPosition targetGridPosition, Action OnActionComplete)
+    public override void TakeAction(GridPosition targetGridPosition, Action OnActionComplete)
     {
         this.OnActionComplete = OnActionComplete;
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition); //So "this" instance gets the value set
@@ -60,7 +60,7 @@ public class MoveAction : BaseAction
     }
 
     //Returns a list with all the grid positions where the unit can move (remember this script is attached to the unit)
-    public List<GridPosition> GetValidActionGridPositionList()
+    public override List<GridPosition> GetValidActionGridPositionList()
     {
         List<GridPosition> validPositionList = new List<GridPosition>(); //Empty list of valid grid positions to move
         GridPosition unitGridPosition = unit.GetGridPosition(); //The position of the unit on the grid
@@ -94,12 +94,6 @@ public class MoveAction : BaseAction
         return validPositionList;
     }
 
-    //Check if the grid position is valid
-    public bool IsValidActionGridPosition (GridPosition gridPosition)
-    {
-        List<GridPosition> validGridPositionList = GetValidActionGridPositionList(); //Take the list of valid movements
-        return validGridPositionList.Contains(gridPosition); //Check if the gridPosition passed to move, is in the list of valid movements
-    }
 
     public override string GetActionName() //Return the name of the function (string specified by us)
     {

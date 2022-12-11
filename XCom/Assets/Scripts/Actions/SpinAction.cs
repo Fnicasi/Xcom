@@ -14,7 +14,7 @@ public class SpinAction : BaseAction
     private float totalSpinAmount;
     private float addSpinAmount;
 
-    
+
     private void Update()
     {
         if (!isActive)//If not performing an action (being active), return
@@ -26,15 +26,14 @@ public class SpinAction : BaseAction
         transform.eulerAngles += new Vector3(0, addSpinAmount, 0); //Rotate on the Y
 
         totalSpinAmount += addSpinAmount;
-        if(totalSpinAmount >= 360f)
+        if (totalSpinAmount >= 360f)
         {
-            isActive= false;
+            isActive = false;
             OnActionComplete(); //Call the delegate
         }
     }
-
-    //Spin has the delegate SpinCompleteDelegate as argument and, when it finishes it will call the method passed as argument (ClearBusy in this case)
-    public void Spin(Action OnActionComplete)
+    //Implement the generic TakeAction function
+    public override void TakeAction(GridPosition gridPosition, Action OnActionComplete)
     {
         this.OnActionComplete = OnActionComplete;
         totalSpinAmount = 0;
@@ -43,5 +42,13 @@ public class SpinAction : BaseAction
     public override string GetActionName()
     {
         return "Spin";
+    }
+
+    //For spin, just return the position of the unit on the grid
+    public override List<GridPosition> GetValidActionGridPositionList()
+    {
+        GridPosition unitGridPosition = unit.GetGridPosition(); //The position of the unit on the grid
+
+        return new List<GridPosition> { unitGridPosition };
     }
 }
