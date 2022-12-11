@@ -100,4 +100,9 @@ public class MoveAction : BaseAction
         List<GridPosition> validGridPositionList = GetValidActionGridPositionList(); //Take the list of valid movements
         return validGridPositionList.Contains(gridPosition); //Check if the gridPosition passed to move, is in the list of valid movements
     }
+
+    public override string GetActionName() //Return the name of the function (string specified by us)
+    {
+        return "Move";
+    }
 }

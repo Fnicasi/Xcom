@@ -16,6 +16,8 @@ public class UnitActionSystem : MonoBehaviour
 
     private bool isBusy;
 
+    private BaseAction selectedAction;
+
 
     private void Awake()
     {
@@ -28,6 +30,11 @@ public class UnitActionSystem : MonoBehaviour
         Instance= this;
     }
 
+    private void Start()
+    {
+        SetSelectedUnit(selectedUnit); //
+    }
+
     private void Update()
     {
 
@@ -35,39 +42,15 @@ public class UnitActionSystem : MonoBehaviour
         {
             return;
         }
-        if (Input.GetMouseButtonDown(0)) //If left click, check for unit selection
-        {
-            TryHandleUnitSelection();
-        }
-        if(Input.GetMouseButtonDown(1)) //Move currently selected unit to the selected position
-        {
-            if (selectedUnit != null) //If there's any selected unit...
-            {
-                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
-
-                if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition)) //if it's a valid position on the grid...
-                {
-                    SetBusy();
-                    selectedUnit.GetMoveAction().Move(mouseGridPosition, ClearBusy); //move to the clicked position
-                }
-            }
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            if (selectedUnit != null)
-            {
-                SetBusy();
-                //To clearBusy and allow to perform actions once the method has finished, we use Delegates, sending the method we want called after the method Spin() has finished
-                selectedUnit.GetSpinAction().Spin(ClearBusy);
-            }
-        }
+        TryHandleUnitSelection(); //Left click selection of units handling
+        
+        HandleSelectedAction(); //Action handling 
     }
 
     private bool TryHandleUnitSelection()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //We will perform a raycast from the camera to the mouse position and store it as ray
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask)) //We check collision with a unit
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask)) //We check collision with a unit
         {
             if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit)) //By using TryGetComponent, it returns a true/false, and if true stores it in out --> unit
             {
@@ -75,23 +58,60 @@ public class UnitActionSystem : MonoBehaviour
                 return true;
             }
         }
-        selectedUnit= null;
         return false; // No collision with a unit
     }
 
     private void SetSelectedUnit(Unit unit)
     {
         selectedUnit = unit;
-        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty); //THe code commented below does the same than this compact line
-        /**if (OnSelectedUnitChanged != null) 
+
+        SetSelectedAction(unit.GetMoveAction());
+
+
+        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty); //The code commented below does the same than this compact line
+        /*if (OnSelectedUnitChanged != null) 
         {
             OnSelectedUnitChanged(this, EventArgs.Empty);
-        }**/
+        }*/
+    }
+
+    public void SetSelectedAction(BaseAction baseAction)
+    {
+        selectedAction = baseAction;
     }
 
     public Unit GetSelectedUnit()
     {
         return selectedUnit;
+    }
+    //There's 2 ways of handling actions, each action has its own function due to the different required args or...
+    //We create a general "takeAction" function 
+    private void HandleSelectedAction()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            if (selectedUnit != null) //If there's any selected unit...
+            {
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
+
+                switch (selectedAction) //In the first case of different functions, we can solve it by doing a switch case
+                {
+
+                    case MoveAction moveAction:
+                        if (moveAction.IsValidActionGridPosition(mouseGridPosition)) //if it's a valid position on the grid...
+                        {
+                            SetBusy();
+                            moveAction.Move(mouseGridPosition, ClearBusy); //move to the clicked position
+                        }
+                        break;
+                    case SpinAction spin:
+                        SetBusy();
+                        //To clearBusy and allow to perform actions once the method has finished, we use Delegates, sending the method we want called after the method Spin() has finished
+                        spin.Spin(ClearBusy);
+                        break;
+                }
+            }
+        }
     }
 
     private void SetBusy()

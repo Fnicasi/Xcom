@@ -22,6 +22,8 @@ public abstract class BaseAction : MonoBehaviour
 
     }
 
+    public abstract string GetActionName(); //We force the classes that extend to implement this function
+
     // Update is called once per frame
     void Update()
     {

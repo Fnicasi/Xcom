@@ -8,12 +8,14 @@ public class Unit : MonoBehaviour
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
     [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
     [SerializeField] private SpinAction spinAction;
+    private BaseAction[] baseActionArray;
 
     private void Awake()
     {
         moveAction = GetComponent<MoveAction>();
         unitAnimator = GetComponentInChildren<Animator>();
         spinAction= GetComponent<SpinAction>();
+        baseActionArray = GetComponents<BaseAction>(); //This will get all components that extend from BaseAction
     }
     private void Start()
     {
@@ -47,6 +49,11 @@ public class Unit : MonoBehaviour
     public SpinAction GetSpinAction()
     {
         return spinAction;
+    }
+
+    public BaseAction[] GetBaseActionArray()
+    {
+        return baseActionArray;
     }
   
 }
