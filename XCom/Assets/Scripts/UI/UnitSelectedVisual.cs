@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+//Green circle around the selected character
 public class UnitSelectedVisual : MonoBehaviour
 {
     [SerializeField] private Unit unit;

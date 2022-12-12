@@ -14,6 +14,7 @@ public class UnitActionSystem : MonoBehaviour
     public event EventHandler OnSelectedUnitChanged;
     public event EventHandler OnSelectedActionChanged;
     public event EventHandler<bool> OnBusyChanged;
+    public event EventHandler onActionStarted;
 
 
     [SerializeField] private Unit selectedUnit;
@@ -109,15 +110,24 @@ public class UnitActionSystem : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            if (selectedUnit != null) //If there's any selected unit...
+            if (selectedUnit == null) //If there's not any selected unit, exit
             {
-                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
-                if (selectedAction.IsValidActionGridPosition(mouseGridPosition)) //Check if it's valid
-                {
-                    SetBusy(); //Set the unit as busy
-                    selectedAction.TakeAction(mouseGridPosition, ClearBusy); //Perform the action and then the ClearBusy when finished
-                }
+                return;
             }
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(Mouse.GetPosition()); //get the position of the mouse on the grid (when clicking)
+            if (!selectedAction.IsValidActionGridPosition(mouseGridPosition)) //Check if it's a valid grid position, if not, exit
+            {
+                return;
+            }
+            if (!selectedUnit.TrySpendActionPoints(selectedAction)) //If it does not have enough action points, exit, if it does, it will detract the cost
+            {
+                return;
+            }
+            //Otherwise, the unit takes the action, so it's busy
+            SetBusy(); //Set the unit as busy
+            selectedAction.TakeAction(mouseGridPosition, ClearBusy); //Perform the action and then the ClearBusy when finished    
+
+            onActionStarted?.Invoke(this, EventArgs.Empty);//Whenever an action is taken, call the event of action started
         }
     }
 

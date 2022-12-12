@@ -22,7 +22,6 @@ public class ActionButtonUI : MonoBehaviour
             UnitActionSystem.Instance.SetSelectedAction(baseAction);
         });
     }
-    // Start is called before the first frame update
 
     public void UpdateSelectedVisual()
     {

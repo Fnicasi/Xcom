@@ -33,5 +33,9 @@ public abstract class BaseAction : MonoBehaviour
         return validGridPositionList.Contains(gridPosition); //Check if the gridPosition passed to move, is in the list of valid movements
     }
     public abstract List<GridPosition> GetValidActionGridPositionList();
-
+    
+    public virtual int GetActionPointCost() //All actions will take 1 action point, but it can be overrided if necessary
+    {
+        return 1;
+    }
 }
