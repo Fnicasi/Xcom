@@ -44,9 +44,13 @@ public class UnitActionSystem : MonoBehaviour
     private void Update()
     {
 
-        if (isBusy) //If performing an action (Busy), 
+        if (isBusy) //If performing an action (Busy), don't allow actions
         {
             return;
+        }
+        if(!TurnSystem.Instance.IsPlayerTurn())
+        {
+            return; //If it's not the player's turn, don't allow actions
         }
         if(EventSystem.current.IsPointerOverGameObject()) //If the cursor is over any UI element...
         {
@@ -69,6 +73,11 @@ public class UnitActionSystem : MonoBehaviour
                     if(unit == selectedUnit) {
                         return false; //if the unit is already selected, don't select it again, (to be able to spin easily)
                     }
+                    if(unit.IsEnemy()) //if the unit selected is an enemy, don't allow it
+                    {
+                        return false;
+                    }
+
                     SetSelectedUnit(unit);
                     return true;
                 }

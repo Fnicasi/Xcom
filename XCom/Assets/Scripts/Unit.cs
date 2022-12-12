@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
     //Since it's static, it will be the same for all instances of the same class, so if any instance calls it, it will be called
     public static event EventHandler OnAnyActionPointsChanged;
 
+    [SerializeField] private bool isEnemy;
 
     public Animator unitAnimator;
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
@@ -96,8 +97,16 @@ public class Unit : MonoBehaviour
     }
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs args)
+    {//If it's an enemy and it's the enemies turn or if it's a controllable unit and it's the player's turn...
+        if (isEnemy && !TurnSystem.Instance.IsPlayerTurn() || !isEnemy && TurnSystem.Instance.IsPlayerTurn())
+        {//Refresh the action points an invoke the event that is used update the display of action points available
+            actionPoints = ACTION_POINTS_MAX;
+            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public bool IsEnemy()
     {
-        actionPoints = ACTION_POINTS_MAX;
-        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        return isEnemy;
     }
 }
