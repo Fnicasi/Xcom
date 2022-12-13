@@ -40,22 +40,19 @@ public class MoveAction : BaseAction
             Vector3 moveDirection = (targetPosition - transform.position).normalized; //We just want the direction, not the magnitude
             transform.position += moveDirection * Time.deltaTime * moveSpeed; //To make it frame-independent, we use Time.deltaTime
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed); //We set the facing of the unit to the moveDirection 
-
         }
         else
         {
             unitAnimator.SetBool("isWalking", false);
-            isActive= false; //No longer performing an action
-            OnActionComplete();
+            ActionComplete();
         }
     }
 
     //Method to move the unit to the target
-    public override void TakeAction(GridPosition targetGridPosition, Action OnActionComplete)
+    public override void TakeAction(GridPosition targetGridPosition, Action onActionComplete)
     {
-        this.OnActionComplete = OnActionComplete;
+        ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition); //So "this" instance gets the value set
-        isActive= true; //The unit is performing action, thus allow action to be executed in Update
 
     }
 

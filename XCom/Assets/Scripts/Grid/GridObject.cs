@@ -44,4 +44,16 @@ public class GridObject //Each cell will contain a GridObject, which will contai
     {
         return unitList.Count > 0; //Return true if there's any unit in the list of units occupying this grid position
     }
+
+    public Unit GetUnit()
+    {
+        if(HasAnyUnit())
+        {
+            return unitList[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

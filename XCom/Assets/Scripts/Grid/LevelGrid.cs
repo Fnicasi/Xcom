@@ -29,7 +29,7 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
         gridObject.AddUnit(unit);
     }
 
-    public List<Unit> GetUnitAtGridPosition(GridPosition gridPosition)
+    public List<Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
     {
         GridObject gridObject = gridSystem.GetGridObject(gridPosition);
         return gridObject.GetUnitList(); 
@@ -64,5 +64,9 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
     { //If there is any unit, return true
         GridObject gridObject = gridSystem.GetGridObject(gridPosition);
         return gridObject.HasAnyUnit();
+    }public Unit GetUnitAtGridPosition (GridPosition gridPosition)
+    { //Get the unit at the grid position 
+        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+        return gridObject.GetUnit();
     }
 }

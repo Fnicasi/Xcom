@@ -28,16 +28,14 @@ public class SpinAction : BaseAction
         totalSpinAmount += addSpinAmount;
         if (totalSpinAmount >= 360f)
         {
-            isActive = false;
-            OnActionComplete(); //Call the delegate
+            ActionComplete();
         }
     }
     //Implement the generic TakeAction function
-    public override void TakeAction(GridPosition gridPosition, Action OnActionComplete)
+    public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        this.OnActionComplete = OnActionComplete;
+        ActionStart(onActionComplete);
         totalSpinAmount = 0;
-        isActive = true;
     }
     public override string GetActionName()
     {

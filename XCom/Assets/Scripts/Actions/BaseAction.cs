@@ -11,7 +11,7 @@ public abstract class BaseAction : MonoBehaviour
     protected bool isActive; //Check if the unit is active(performing an action), if true, allow actions on update
     protected Animator unitAnimator;
 
-    protected Action OnActionComplete;
+    protected Action onActionComplete;
 
 
     //Virtual so it can be overrided
@@ -37,5 +37,15 @@ public abstract class BaseAction : MonoBehaviour
     public virtual int GetActionPointCost() //All actions will take 1 action point, but it can be overrided if necessary
     {
         return 1;
+    }
+
+    protected void ActionStart(Action onActionComplete){
+        isActive = true; //The unit is performing action, thus allow action to be executed in Update
+        this.onActionComplete = onActionComplete;
+    }
+    protected void ActionComplete()
+    {
+        isActive = false;
+        onActionComplete(); //Call the delegate
     }
 }
