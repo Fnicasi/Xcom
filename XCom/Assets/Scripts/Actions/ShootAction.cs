@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,6 +14,8 @@ public class ShootAction : BaseAction
     private bool canShootBullet;
     private float rotateSpeed;
     private Vector3 aimDirection;
+
+    public event EventHandler OnShoot;
     private enum State
     {
         Aiming,
@@ -132,7 +135,7 @@ public class ShootAction : BaseAction
     private void Shoot()
     {
         targetUnit.Damage();
-
+        OnShoot?.Invoke(this, EventArgs.Empty);
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {//When we want to take action by shooting, 

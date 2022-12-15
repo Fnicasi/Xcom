@@ -11,6 +11,9 @@ public class MoveAction : BaseAction
     private float moveSpeed; //At what speed it moves
     private float rotateSpeed;
 
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
+
     [SerializeField] private int maxMoveDistance;
    
     protected override void Awake()
@@ -36,15 +39,14 @@ public class MoveAction : BaseAction
         }
         if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance) //If we reached the target, don't move
         {
-            unitAnimator.SetBool("isWalking", true); //We set the bool to true so the Animator transitions to walking
             Vector3 moveDirection = (targetPosition - transform.position).normalized; //We just want the direction, not the magnitude
             transform.position += moveDirection * Time.deltaTime * moveSpeed; //To make it frame-independent, we use Time.deltaTime
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed); //We set the facing of the unit to the moveDirection 
         }
         else
         {
-            unitAnimator.SetBool("isWalking", false);
-            ActionComplete();
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
+            ActionComplete(); //So set active to false and call the delegate assigned to onActionComplete
         }
     }
 
@@ -54,6 +56,7 @@ public class MoveAction : BaseAction
         ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition); //So "this" instance gets the value set
 
+        OnStartMoving?.Invoke(this, EventArgs.Empty);
     }
 
     //Returns a list with all the grid positions where the unit can move (remember this script is attached to the unit)

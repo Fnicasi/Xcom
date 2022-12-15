@@ -12,7 +12,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField] private bool isEnemy;
 
-    public Animator unitAnimator;
+    [SerializeField]public Animator unitAnimator;
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
     [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
     [SerializeField] private SpinAction spinAction;
@@ -22,7 +22,7 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         moveAction = GetComponent<MoveAction>();
-        unitAnimator = GetComponentInChildren<Animator>();
+        //unitAnimator = GetComponentInChildren<Animator>();
         spinAction= GetComponent<SpinAction>();
         baseActionArray = GetComponents<BaseAction>(); //This will get all components that extend from BaseAction
         actionPoints = ACTION_POINTS_MAX;
@@ -37,7 +37,7 @@ public class Unit : MonoBehaviour
     private void Update()
     {
        
-        if (unitAnimator.GetBool("isWalking")) //If the unit is walking, update its grid position while moving
+        if (unitAnimator.GetBool("IsWalking")) //If the unit is walking, update its grid position while moving
         {
             GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position); //grid position that checks if its different (this one is in real time) than the current one (in code)
             if (newGridPosition != gridPosition) //If its new Grid Position is different, then it moved and we need to update the grid occupancy

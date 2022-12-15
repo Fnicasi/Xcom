@@ -9,7 +9,6 @@ public abstract class BaseAction : MonoBehaviour
     //protected so private except for the classes that extend from this one (MoveAction, SpinAction,...)
     protected Unit unit;
     protected bool isActive; //Check if the unit is active(performing an action), if true, allow actions on update
-    protected Animator unitAnimator;
 
     protected Action onActionComplete;
 
@@ -18,7 +17,6 @@ public abstract class BaseAction : MonoBehaviour
     protected virtual void Awake()
     {
         unit = GetComponent<Unit>();
-        unitAnimator = GetComponentInChildren<Animator>();
 
     }
 
@@ -41,7 +39,7 @@ public abstract class BaseAction : MonoBehaviour
 
     protected void ActionStart(Action onActionComplete){
         isActive = true; //The unit is performing action, thus allow action to be executed in Update
-        this.onActionComplete = onActionComplete;
+        this.onActionComplete = onActionComplete; //Assign to the variable onActionComplete the delegate we passed as value
     }
     protected void ActionComplete()
     {
