@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField]public Animator unitAnimator;
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
+    private HealthSystem healthSystem;
     [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
     [SerializeField] private SpinAction spinAction;
     private BaseAction[] baseActionArray;
@@ -22,6 +23,7 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         moveAction = GetComponent<MoveAction>();
+        healthSystem= GetComponent<HealthSystem>();
         //unitAnimator = GetComponentInChildren<Animator>();
         spinAction= GetComponent<SpinAction>();
         baseActionArray = GetComponents<BaseAction>(); //This will get all components that extend from BaseAction
@@ -33,6 +35,7 @@ public class Unit : MonoBehaviour
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this); //and adds it to the grid  
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+        healthSystem.OnDead += HealtSystem_OnDead;
     }
     private void Update()
     {
@@ -96,7 +99,7 @@ public class Unit : MonoBehaviour
         return actionPoints;
     }
 
-    private void TurnSystem_OnTurnChanged(object sender, EventArgs args)
+    private void TurnSystem_OnTurnChanged(object sender, EventArgs args) //Called when the event of turn changed is called
     {//If it's an enemy and it's the enemies turn or if it's a controllable unit and it's the player's turn...
         if (isEnemy && !TurnSystem.Instance.IsPlayerTurn() || !isEnemy && TurnSystem.Instance.IsPlayerTurn())
         {//Refresh the action points an invoke the event that is used update the display of action points available
@@ -105,16 +108,21 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public bool IsEnemy()
+    public bool IsEnemy() //Identify as enemy (AI) or controller by player
     {
         return isEnemy;
     }
-    public Vector3 GetWorldPosition()
+    public Vector3 GetWorldPosition() //Return the Vector3 position (x,y,z) of this unit
     {
         return transform.position;  
     }
-    public void Damage()
+    public void Damage(int damageAmount) //Damage amount delivered
     {
-        Debug.Log(transform + " !ouch!");
+        healthSystem.Damage(damageAmount);
+    }
+    private void HealtSystem_OnDead(object sender, EventArgs args) //When this unit dies...
+    {
+        LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this); //Remove from the gridPosition (that this unit occupies), this unit
+        Destroy(gameObject);
     }
 }

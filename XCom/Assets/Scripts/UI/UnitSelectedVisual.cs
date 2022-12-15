@@ -35,8 +35,15 @@ public class UnitSelectedVisual : MonoBehaviour
         }
         else
         {
-            meshRenderer.enabled = false;
+            meshRenderer.enabled = false; 
         }
+    }
+    //When the unit is destroyed, this causes the MeshRenderer to encounter a bug because it tries to deselect the unit by disabling the meshRenderer on the UpdateVisual function
+    //but since the gameObject is destroyed... there's no meshRender, so we will use this built in function
+    private void OnDestroy()
+    {
+        UnitActionSystem.Instance.OnSelectedUnitChanged -= UnitActionSystem_OnSelectedUnitChanged; //We unsubscribe from the event that calls the Update Visual Method
+
     }
 
 }

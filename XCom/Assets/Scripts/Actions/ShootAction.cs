@@ -14,6 +14,7 @@ public class ShootAction : BaseAction
     private bool canShootBullet;
     private float rotateSpeed;
     private Vector3 aimDirection;
+    private int damageAmount; //This value can be modified by different weapons (TO DO)
 
     public event EventHandler<OnShootEventArgs> OnShoot;
     //For the bulletProjectile, we need some way of knowing the target position, so we need to know the target unit
@@ -36,6 +37,7 @@ public class ShootAction : BaseAction
     {
         maxShootDistance = 7;
         rotateSpeed = 10f;
+        damageAmount = 40;
 
     }
 
@@ -142,7 +144,7 @@ public class ShootAction : BaseAction
     }
     private void Shoot()
     {
-        targetUnit.Damage();
+        targetUnit.Damage(damageAmount);
         OnShoot?.Invoke(this, new OnShootEventArgs
         {
             targetUnit= targetUnit,

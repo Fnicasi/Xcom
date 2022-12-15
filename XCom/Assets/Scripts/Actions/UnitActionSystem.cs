@@ -83,7 +83,7 @@ public class UnitActionSystem : MonoBehaviour
                 }
             }
         }
-        return false; // No collision with a unit
+        return false; //No collision with a unit
     }
 
     private void SetSelectedUnit(Unit unit)
