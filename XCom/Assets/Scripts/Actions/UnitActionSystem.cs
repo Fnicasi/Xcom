@@ -14,7 +14,7 @@ public class UnitActionSystem : MonoBehaviour
     public event EventHandler OnSelectedUnitChanged;
     public event EventHandler OnSelectedActionChanged;
     public event EventHandler<bool> OnBusyChanged;
-    public event EventHandler onActionStarted;
+    public event EventHandler OnActionStarted;
 
 
     [SerializeField] private Unit selectedUnit;
@@ -136,7 +136,7 @@ public class UnitActionSystem : MonoBehaviour
             SetBusy(); //Set the unit as busy
             selectedAction.TakeAction(mouseGridPosition, ClearBusy); //Perform the action and then the ClearBusy when finished    
 
-            onActionStarted?.Invoke(this, EventArgs.Empty);//Whenever an action is taken, call the event of action started
+            OnActionStarted?.Invoke(this, EventArgs.Empty);//Whenever an action is taken, call the event of action started
         }
     }
 

@@ -15,7 +15,15 @@ public class ShootAction : BaseAction
     private float rotateSpeed;
     private Vector3 aimDirection;
 
-    public event EventHandler OnShoot;
+    public event EventHandler<OnShootEventArgs> OnShoot;
+    //For the bulletProjectile, we need some way of knowing the target position, so we need to know the target unit
+    //to achieve this we will extend the EventArgs class, this means that we can't use EventArgs.Empty when Invoking
+    public class OnShootEventArgs : EventArgs
+    {
+        public Unit targetUnit;
+        public Unit shootingUnit;
+    }
+
     private enum State
     {
         Aiming,
@@ -135,7 +143,11 @@ public class ShootAction : BaseAction
     private void Shoot()
     {
         targetUnit.Damage();
-        OnShoot?.Invoke(this, EventArgs.Empty);
+        OnShoot?.Invoke(this, new OnShootEventArgs
+        {
+            targetUnit= targetUnit,
+            shootingUnit= unit //Got in the BaseAction class
+        });
     }
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {//When we want to take action by shooting, 

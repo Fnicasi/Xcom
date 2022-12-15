@@ -6,7 +6,8 @@ using System;
 public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-
+    [SerializeField] private Transform bulletProjectilePrefab;
+    [SerializeField] private Transform shootPointTransform;
     private void Awake()
     {
        // animator = GetComponentInChildren<Animator>();
@@ -31,9 +32,18 @@ public class UnitAnimator : MonoBehaviour
         Debug.Log("Called");
         animator.SetBool("IsWalking",false);
     }
-    private void ShootAction_OnShoot(object sender, EventArgs arg)
+    //EventArgs is not Empty anymore, check ShootAction class to see why, args contains target unit and shooting unit
+    private void ShootAction_OnShoot(object sender, ShootAction.OnShootEventArgs args)
     {
         animator.SetTrigger("Shoot");
+
+        Transform bulletTransform = Instantiate(bulletProjectilePrefab, shootPointTransform.position, Quaternion.identity);
+        BulletProjectile bulletProjectile = bulletTransform.GetComponent<BulletProjectile>();
+        
+        Vector3 targetUnitShootAtPosition = args.targetUnit.GetWorldPosition();
+        //With this, the height of the objective will be the same as the height of the weapon (this might change for enemies with different heights
+        targetUnitShootAtPosition.y = shootPointTransform.position.y;  
+        bulletProjectile.SetUp(targetUnitShootAtPosition);
     }
 
 }

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class UnitActionSystemUI : MonoBehaviour
 {
-
     [SerializeField] private Transform actionButtonPrefab;
     [SerializeField] private Transform actionButtonContainerTransform;
     [SerializeField] private TextMeshProUGUI actionPointsText;
@@ -23,7 +22,7 @@ public class UnitActionSystemUI : MonoBehaviour
     {
         UnitActionSystem.Instance.OnSelectedUnitChanged += UnitActionSystem_OnSelectedUnitChanged; //Subscribe to the event that the selected unit changes
         UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged; //Subscribe to the event that the selected action changes
-        UnitActionSystem.Instance.onActionStarted += UnitActionSystem_onActionStarted; //Subscribe to the event that the selected action changes
+        UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted; //Subscribe to the event that the selected action changes
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
 
@@ -39,10 +38,10 @@ public class UnitActionSystemUI : MonoBehaviour
         }
         actionButtonsUIList.Clear(); //Clear the list of buttons
 
-        //we want to make buttons for the actions that the unit has
+        //we want to make buttons for the actions that the unit has, so we get 
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
         
-        foreach(BaseAction baseAction in selectedUnit.GetBaseActionArray())
+        foreach(BaseAction baseAction in selectedUnit.GetBaseActionArray()) //Get all actions of the selectedUnit
         {
             Transform actionButtonTransform = Instantiate(actionButtonPrefab, actionButtonContainerTransform); //Instantiate Button prefab in the container
             ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>(); //Grab the ActionButtonUi element
@@ -61,7 +60,7 @@ public class UnitActionSystemUI : MonoBehaviour
     {//If selected action changes, call the update actions
         UpdateSelectedVisual();
     }
-    private void UnitActionSystem_onActionStarted(object sender, EventArgs args)
+    private void UnitActionSystem_OnActionStarted(object sender, EventArgs args)
     {//If an action is taken, update the action points UI
         UpdateActionPoints();
     }
