@@ -34,8 +34,9 @@ public class SpinAction : BaseAction
     //Implement the generic TakeAction function
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        ActionStart(onActionComplete);
         totalSpinAmount = 0;
+        ActionStart(onActionComplete); //We call this function, that calls the event, and do it at the end to make sure everything is done before calling the event
+
     }
     public override string GetActionName()
     {

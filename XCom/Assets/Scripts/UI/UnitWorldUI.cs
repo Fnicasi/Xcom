@@ -16,7 +16,7 @@ public class UnitWorldUI : MonoBehaviour
     private void Start() 
     {
         Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged; //This will update for all units, which is a bit wasteful
-        healthSystem.OnDamaged += HealthSystem_OnDamaged; //Whenever the unit (and its healthSystem) is damaged, use this method
+        healthSystem.OnDamaged += HealthSystem_OnDamaged; //Whenever the unit (and its healthSystem) is damaged, use this methodBa
         UpdateActionPointsText();
         UpdateHealthBar();
     }

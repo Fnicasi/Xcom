@@ -154,8 +154,6 @@ public class ShootAction : BaseAction
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {//When we want to take action by shooting, 
 
-        ActionStart(onActionComplete);
-
         state = State.Aiming;
         float aimingStateTime = 1f;
         stateTimer = aimingStateTime;
@@ -163,5 +161,13 @@ public class ShootAction : BaseAction
         aimDirection = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized; //Get the direction to the target
 
         canShootBullet = true;
+
+        ActionStart(onActionComplete); //We call this function, that calls the event, and do it at the end to make sure everything is done before calling the event
+
+    }
+
+    public Unit GetTargetUnit()
+    {
+        return targetUnit;  
     }
 }

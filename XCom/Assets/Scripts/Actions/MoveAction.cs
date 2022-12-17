@@ -53,10 +53,11 @@ public class MoveAction : BaseAction
     //Method to move the unit to the target
     public override void TakeAction(GridPosition targetGridPosition, Action onActionComplete)
     {
-        ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition); //So "this" instance gets the value set
 
         OnStartMoving?.Invoke(this, EventArgs.Empty);
+        ActionStart(onActionComplete); //We call this function, that calls the event, and do it at the end to make sure everything is done before calling the event
+
     }
 
     //Returns a list with all the grid positions where the unit can move (remember this script is attached to the unit)

@@ -6,6 +6,9 @@ using System;
 //abstract so it's never created
 public abstract class BaseAction : MonoBehaviour
 {
+    //Events when action is started / completed
+    public static event EventHandler OnAnyActionStarted;
+    public static event EventHandler OnAnyActionCompleted;
     //protected so private except for the classes that extend from this one (MoveAction, SpinAction,...)
     protected Unit unit;
     protected bool isActive; //Check if the unit is active(performing an action), if true, allow actions on update
@@ -37,13 +40,23 @@ public abstract class BaseAction : MonoBehaviour
         return 1;
     }
 
+    //We want the events to be called after something has already happened, so we put the Invoke at the end of the function
     protected void ActionStart(Action onActionComplete){
         isActive = true; //The unit is performing action, thus allow action to be executed in Update
         this.onActionComplete = onActionComplete; //Assign to the variable onActionComplete the delegate we passed as value
+
+        OnAnyActionStarted?.Invoke(this, EventArgs.Empty);  
+
     }
     protected void ActionComplete()
     {
         isActive = false;
         onActionComplete(); //Call the delegate
+
+        OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
+    }
+    public Unit GetUnit()
+    {
+        return unit; 
     }
 }
