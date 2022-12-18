@@ -45,8 +45,11 @@ public class Unit : MonoBehaviour
             GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position); //grid position that checks if its different (this one is in real time) than the current one (in code)
             if (newGridPosition != gridPosition) //If its new Grid Position is different, then it moved and we need to update the grid occupancy
             {
-                LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition); //set the unit as having occupied newGridPosition and clear gridPosition of unit
+                //Unit changed grid position
+                GridPosition oldGridPosition = gridPosition;
                 gridPosition = newGridPosition; //Set it as current position
+
+                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition); //set the unit as having occupied newGridPosition and clear gridPosition of unit
             }
         }
     }

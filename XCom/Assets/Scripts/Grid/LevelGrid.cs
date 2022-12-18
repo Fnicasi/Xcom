@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
     public static LevelGrid Instance { get; private set; }
     [SerializeField] private Transform gridDebugObjectPrefab;
 
+
+    public event EventHandler OnAnyMovedGridPosition;
     private GridSystem gridSystem; 
     // Start is called before the first frame update
     private void Awake()
@@ -58,6 +61,8 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
     {
         RemoveUnitAtGridPosition(fromGridPos, unit); //Clear the grid position from the unit that left
         AddUnitAtGridPosition(toGridPos, unit); //Assign to toGridPos the unit
+
+        OnAnyMovedGridPosition?.Invoke(this, EventArgs.Empty);
     }
 
     public bool HasAnyUnitOnGridPosition (GridPosition gridPosition)

@@ -12,7 +12,7 @@ public class Testing : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+   /* void Update()
     {
         if (Input.GetKeyDown(KeyCode.T)) {
             GridSystemVisual.Instance.HideAllGridPositions();
@@ -23,5 +23,5 @@ public class Testing : MonoBehaviour
         {
 
         }
-    }
+    }*/
 }
