@@ -155,6 +155,7 @@ MonoBehaviour:
   unitAnimator: {fileID: 460733343408775188}
   moveAction: {fileID: 0}
   spinAction: {fileID: 0}
+  shootAction: {fileID: 0}
 --- !u!136 &8544671272490262292
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -234,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5120f9540669254e85a8635ea23a389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  health: 100
 --- !u!114 &5915308354693572727
 MonoBehaviour:
   m_ObjectHideFlags: 0

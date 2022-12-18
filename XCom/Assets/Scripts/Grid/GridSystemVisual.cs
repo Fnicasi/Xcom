@@ -121,7 +121,7 @@ public class GridSystemVisual : MonoBehaviour
                 break;
             case ShootAction shootAction:
                 gridVisualType = GridVisualType.Red;
-                ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetMaxRange(), GridVisualType.RedSoft);
+                ShowGridPositionRange(selectedUnit.GetGridPosition(), shootAction.GetMaxRange(), GridVisualType.RedSoft); //Show a redsoft color for the clicable area of shoot range
                 break;
             case SpinAction spinAction:
                 gridVisualType = GridVisualType.Blue;

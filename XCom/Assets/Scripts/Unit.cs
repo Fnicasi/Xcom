@@ -9,6 +9,9 @@ public class Unit : MonoBehaviour
 
     //Since it's static, it will be the same for all instances of the same class, so if any instance calls it, it will be called
     public static event EventHandler OnAnyActionPointsChanged;
+    public static event EventHandler OnAnyUnitSpawned;
+    public static event EventHandler OnAnyUnitDead;
+
 
     [SerializeField] private bool isEnemy;
 
@@ -17,6 +20,7 @@ public class Unit : MonoBehaviour
     private HealthSystem healthSystem;
     [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
     [SerializeField] private SpinAction spinAction;
+    [SerializeField] private ShootAction shootAction;
     private BaseAction[] baseActionArray;
     private int actionPoints;
 
@@ -26,6 +30,7 @@ public class Unit : MonoBehaviour
         healthSystem= GetComponent<HealthSystem>();
         //unitAnimator = GetComponentInChildren<Animator>();
         spinAction= GetComponent<SpinAction>();
+        shootAction= GetComponent<ShootAction>();
         baseActionArray = GetComponents<BaseAction>(); //This will get all components that extend from BaseAction
         actionPoints = ACTION_POINTS_MAX;
     }
@@ -36,6 +41,8 @@ public class Unit : MonoBehaviour
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         healthSystem.OnDead += HealtSystem_OnDead;
+
+        OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty); //Call this event when the unit is created
     }
     private void Update()
     {
@@ -67,6 +74,9 @@ public class Unit : MonoBehaviour
     public SpinAction GetSpinAction()
     {
         return spinAction;
+    }public ShootAction GetShootAction()
+    {
+        return shootAction;
     }
 
     public BaseAction[] GetBaseActionArray()
@@ -127,5 +137,14 @@ public class Unit : MonoBehaviour
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this); //Remove from the gridPosition (that this unit occupies), this unit
         Destroy(gameObject);
+
+        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
     }
+    public float GetHealthNormalized()
+    {
+        return healthSystem.GetHealthNormalized();
+    }
+
+
+
 }
