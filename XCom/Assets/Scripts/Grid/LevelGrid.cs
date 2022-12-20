@@ -10,7 +10,8 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
 
 
     public event EventHandler OnAnyMovedGridPosition;
-    private GridSystem gridSystem; 
+
+    private GridSystem<GridObject> gridSystem; 
     // Start is called before the first frame update
     private void Awake()
     {
@@ -21,7 +22,10 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
             return;
         }
         Instance = this;
-        gridSystem = new GridSystem(10, 10, 2f);
+        //Due to the GridSystem generic configuration, it needs a delegate, we will use a lambda expression (define function here) as parameter
+        //so it receives two parameters as defined in the Func of GridSystem a GridSystem<GridObject> and GridPosition and returns a new GridObject(gridPosition, g)
+        gridSystem = new GridSystem<GridObject>(10, 10, 2f,     
+            (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(gridPosition, g));
         gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
 

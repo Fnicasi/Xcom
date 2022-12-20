@@ -18,19 +18,13 @@ public class Unit : MonoBehaviour
     [SerializeField]public Animator unitAnimator;
     private GridPosition gridPosition; //To keep track of which gridPosition it's occupying
     private HealthSystem healthSystem;
-    [SerializeField] private MoveAction moveAction; //The move action is stored in the MoveAction class
-    [SerializeField] private SpinAction spinAction;
-    [SerializeField] private ShootAction shootAction;
     private BaseAction[] baseActionArray;
     private int actionPoints;
 
     private void Awake()
     {
-        moveAction = GetComponent<MoveAction>();
         healthSystem= GetComponent<HealthSystem>();
         //unitAnimator = GetComponentInChildren<Animator>();
-        spinAction= GetComponent<SpinAction>();
-        shootAction= GetComponent<ShootAction>();
         baseActionArray = GetComponents<BaseAction>(); //This will get all components that extend from BaseAction
         actionPoints = ACTION_POINTS_MAX;
     }
@@ -61,22 +55,23 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public MoveAction GetMoveAction()
+    //Generic method to get all the possible actions, we extend from BaseAction so we force the generic to be of the type baseAction (shoot, move,...)
+    public T GetAction<T>() where T : BaseAction
     {
-        return moveAction;
+        foreach(BaseAction baseAction in baseActionArray)
+        {
+            if (baseAction is T) //If this baseAction is of type T... (for example we did GetAction<ShootAction>, if one of the actions in the array is of that type...)
+            {
+                return (T)baseAction; //...return the baseAction casted as type T (one of the actions that BaseAction extends, shoot, move,...)
+            }
+        }
+        return null;
     }
+
 
     public GridPosition GetGridPosition()
     {
         return gridPosition;
-    }
-
-    public SpinAction GetSpinAction()
-    {
-        return spinAction;
-    }public ShootAction GetShootAction()
-    {
-        return shootAction;
     }
 
     public BaseAction[] GetBaseActionArray()

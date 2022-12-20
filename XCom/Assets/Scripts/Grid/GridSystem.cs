@@ -1,30 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class GridSystem //Not extending monobehaviour, because we want to use constructor
+//Since we want to use the GridSystem for the pathfinding, and to separate the game logic from the pathfinding logic, we will make it Generic
+//C# does not allow to use new() with multiple parameters when defining it as constraint (where TGridObject : new() ), so we receive a delegate that creates our TGridObject
+public class GridSystem<TGridObject>//Not extending monobehaviour, because we want to use constructor
 {
     private int width;
     private int height;
     private float cellsize;
 
-    private GridObject[,] gridObjectsArray;
-    public GridSystem(int width, int height, float cellsize) //Constructor
+    private TGridObject[,] gridObjectsArray;
+    //We used the constructor "gridObjectsArray[x,z] = new TGridObject(this, gridPosition);" now we will use the delegate Func, which returns something,
+    //Matching the old constructor: this = GridSystem<TGridObject>, a GridPosition and returns a TGridObject, this func will be called createGridObject
+    public GridSystem(int width, int height, float cellsize, Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
     {
         this.width = width;
         this.height = height;
         this.cellsize = cellsize;
 
         //We initialize the array of grid objects to the width and height of the grid defined by the grid system
-        gridObjectsArray = new GridObject[width, height];
+        gridObjectsArray = new TGridObject[width, height];
         //Here we create the GridObjects
         for (int x= 0; x < width; x++)
         { 
             for (int z=0; z < height; z++)
             {
                 GridPosition gridPosition = new GridPosition(x, z);
-                gridObjectsArray[x,z] = new GridObject(gridPosition, this);
+                gridObjectsArray[x,z] = createGridObject(this, gridPosition); //Delegate, will return a TGridObject
             }
         }
     }
@@ -58,12 +63,12 @@ public class GridSystem //Not extending monobehaviour, because we want to use co
                 //Of said debugPrefab, get the GridDebugObject
                 GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                 //Set it as a GridObject
-                gridDebugObject.SetGridObject(GetGridObject(gridPosition));
+                gridDebugObject.SetGridObject(GetGridObject(gridPosition) as GridObject); //Cast it as GridObject because it expects a TGridObject
             }
         }
     }
 
-    public GridObject GetGridObject(GridPosition gridPosition) //Return the GridObject at the indicated grid position
+    public TGridObject GetGridObject(GridPosition gridPosition) //Return the GridObject at the indicated grid position
     {
         return gridObjectsArray[gridPosition.x, gridPosition.z];
     }
