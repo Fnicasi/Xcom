@@ -63,7 +63,7 @@ public class GridSystem<TGridObject>//Not extending monobehaviour, because we wa
                 //Of said debugPrefab, get the GridDebugObject
                 GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                 //Set it as a GridObject
-                gridDebugObject.SetGridObject(GetGridObject(gridPosition) as GridObject); //Cast it as GridObject because it expects a TGridObject
+                gridDebugObject.SetGridObject(GetGridObject(gridPosition)); 
             }
         }
     }

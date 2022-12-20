@@ -26,7 +26,7 @@ public class LevelGrid : MonoBehaviour //This is the main script that will manag
         //so it receives two parameters as defined in the Func of GridSystem a GridSystem<GridObject> and GridPosition and returns a new GridObject(gridPosition, g)
         gridSystem = new GridSystem<GridObject>(10, 10, 2f,     
             (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(gridPosition, g));
-        gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+        //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
 
     //Gets the GridObject from the GridSystem and sets the unit
